@@ -2,6 +2,7 @@ import { Hono } from "hono";
 import { verify } from "hono/jwt";
 import { PrismaClient } from "@prisma/client/edge";
 import { withAccelerate } from "@prisma/extension-accelerate";
+import { createBlogInput, updateBlogInput } from "@rrai21/iden34";
 export const blogRouter = new Hono<{
     Bindings: {
         JWT_KEY: string,
@@ -33,6 +34,14 @@ blogRouter.use('/*', async (c, next) => {   //EXTRACT THE USER_ID FROM  HERE AND
 });
 blogRouter.post('/', async (c) => {
     const body = await c.req.json();
+    const {success} = createBlogInput.safeParse(body);
+    if(!success){
+        c.status(403);
+        return c.json({
+            msg : "WRONG INPUTS",
+            inform : "Failed Zod Validation"
+        })
+    }
     const authorID = c.get("AuthorID")
     const prisma = new PrismaClient({
         datasourceUrl: c.env.DATABASE_URL
@@ -57,6 +66,14 @@ blogRouter.post('/', async (c) => {
 blogRouter.put('/', async (c) => {
 
     const body = await c.req.json();
+    const {success} = updateBlogInput.safeParse(body);
+    if(!success){
+        c.status(403);
+        return c.json({
+            msg : "WRONG INPUTS",
+            inform : "Failed Zod Validation"
+        })
+    }
     const prisma = new PrismaClient({
         datasourceUrl: c.env.DATABASE_URL
     }).$extends(withAccelerate())
@@ -80,7 +97,6 @@ blogRouter.put('/', async (c) => {
     }
 })
 blogRouter.get('/bulk', async (c) => {
-    const body = await c.req.json();
     const authorID = c.get("AuthorID")
 
     const prisma = new PrismaClient({
@@ -106,7 +122,6 @@ blogRouter.get('/bulk', async (c) => {
 })
 
 blogRouter.get('/:id', async (c) => {
-    const body = await c.req.json();
     const bID  = await c.req.param("id")
     const prisma = new PrismaClient({
         datasourceUrl: c.env.DATABASE_URL
