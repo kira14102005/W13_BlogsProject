@@ -4,6 +4,9 @@ import { withAccelerate } from '@prisma/extension-accelerate'
 import { verify, sign, decode } from 'hono/jwt'
 import { blogRouter } from '../routes/blogRouter'
 import { userRouter } from '../routes/userRouter'
+import { cors } from 'hono/cors'
+
+
  //BINDING TO HONO IN TYPESCRIPT IF U RE TRYING TO USE3 AN  ENV VARIABLE
 const app = new Hono<{
   Bindings:{
@@ -11,6 +14,7 @@ const app = new Hono<{
     JWT_KEY  : string
   }
 }>()
+app.use('/*', cors())
 // app.use('/api/v1/blog/*' , async (c,next)=>{
 //   const body =  await c.req.json();
 //   const auth = await c.req.header("Authorization") || " "
