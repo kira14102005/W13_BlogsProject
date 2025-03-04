@@ -17,7 +17,7 @@ export const blogRouter = new Hono<{
 
 blogRouter.use("/*", authMiddleware);
 
-blogRouter.post("/create", validateCreateBlog, async (c) => {
+blogRouter.post("/", validateCreateBlog, async (c) => {
     const prisma = new PrismaClient({
         datasourceUrl: c.env.DATABASE_URL,
       }).$extends(withAccelerate());
@@ -79,3 +79,29 @@ blogRouter.put("/", validateUpdateBlog, async (c) => {
       return c.text("Error in BLOG updation");
     }
   });
+  blogRouter.get("/:id", async (c) => {
+    const blogID = c.req.param("id");
+  
+    try {
+      const blog = await prisma.post.findUnique({
+        where: { id: blogID },
+        select: {
+          id: true,
+          title: true,
+          desc: true,
+          author: { select: { name: true, email: true } },
+        },
+      });
+  
+      if (!blog) {
+        c.status(403);
+        return c.json({ msg: "No blog found with the given ID" });
+      }
+  
+      return c.json({ msg: "Blog fetched successfully", blog });
+    } catch (e: any) {
+      c.status(411);
+      return c.text("Error in fetching blog");
+    }
+  });
+  
