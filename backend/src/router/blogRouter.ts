@@ -40,4 +40,20 @@ blogRouter.post("/create", validateCreateBlog, async (c) => {
     return c.json({ msg: "Error in blog creation", error: e.message });
   }
 });
+blogRouter.get("/bulk", async (c) => {
+    const prisma = new PrismaClient({
+        datasourceUrl: c.env.DATABASE_URL,
+      }).$extends(withAccelerate());
+      
+  const authorID = c.get("userId");
+
+  try {
+    const blogs = await prisma.post.findMany({ where: { authorId: authorID } });
+
+    return c.json({ blogs });
+  } catch (e: any) {
+    c.status(500);
+    return c.json({ msg: "Error fetching blogs", error: e.message });
+  }
+});
 
