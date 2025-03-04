@@ -57,3 +57,25 @@ blogRouter.get("/bulk", async (c) => {
   }
 });
 
+blogRouter.put("/", validateUpdateBlog, async (c) => {
+    const prisma = new PrismaClient({
+        datasourceUrl: c.env.DATABASE_URL,
+      }).$extends(withAccelerate());
+      
+    const body = await c.req.json();
+  
+    try {
+      const updatedBlog = await prisma.post.update({
+        where: { id: body.blogid },
+        data: {
+          title: body.title,
+          desc: body.desc,
+        },
+      });
+  
+      return c.json({ msg: "Blog updated successfully", id: updatedBlog.id });
+    } catch (e: any) {
+      c.status(411);
+      return c.text("Error in BLOG updation");
+    }
+  });
