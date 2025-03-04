@@ -21,5 +21,4 @@ export const updateBlogInput = z.object({
     blogid : z.string()
 
 })
-
 export type SignupInfer = z.infer<typeof signedInput>
