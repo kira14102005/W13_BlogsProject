@@ -4,10 +4,10 @@ export const Quote = (props: any) => {
     const [quote, setQuote] = useState({
         msg: "",
         author: "anonymous",
-        design : "Nonchalant"
+        design: "Nonchalant"
     });
     useEffect(() => {
-        setQuote({ msg: `"${props.msg}"`, author: props.author , design:props.design });
+        setQuote(props);
     }, [])
     return <>
         <div className="container bg-slate-200  h-screen  grid grid-rows-2">
@@ -15,8 +15,8 @@ export const Quote = (props: any) => {
                 <p className="text-center text-4xl font-bold">{quote.msg}</p>
             </div>
             <div className="author grod-rows-2 m-2 p-4">
-               <p className=" text-lg font-mono">{quote.author}</p>
-               <p className="text-slate-500	 text-xs font-serif">{quote.design}</p>
+                <p className=" text-lg font-mono">{quote.author}</p>
+                <p className="text-slate-500	 text-xs font-serif">{quote.design}</p>
             </div>
         </div></>
 }
