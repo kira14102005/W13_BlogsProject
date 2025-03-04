@@ -80,6 +80,10 @@ blogRouter.put("/", validateUpdateBlog, async (c) => {
     }
   });
   blogRouter.get("/:id", async (c) => {
+    const prisma = new PrismaClient({
+        datasourceUrl: c.env.DATABASE_URL,
+      }).$extends(withAccelerate());
+      
     const blogID = c.req.param("id");
   
     try {
