@@ -1,5 +1,7 @@
 import { Hono } from 'hono'
 import { cors } from 'hono/cors'
+import { userRouter } from './router/userRouter'
+import { blogRouter } from './router/blogRouter'
 
 
  //BINDING TO HONO IN TYPESCRIPT IF U RE TRYING TO USE3 AN  ENV VARIABLE

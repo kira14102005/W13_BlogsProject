@@ -2,7 +2,7 @@ import { verify, sign } from "hono/jwt";
 import { Context, Next } from "hono";
 
 export const generateToken = async (id: string, secret: string) => {
-    return await sign({ id }, secret);
+    return await sign({ id : id }, secret);
   };
   
 export const authMiddleware = async (c: Context, next: Next) => {
@@ -17,7 +17,7 @@ export const authMiddleware = async (c: Context, next: Next) => {
     const decoded = await verify(token, c.env.JWT_KEY);
     if (!decoded) throw new Error("Invalid Token");
     
-    c.set("user", decoded);
+    c.set("userId", decoded.id);
     await next();
   } catch (err) {
     c.status(403);
