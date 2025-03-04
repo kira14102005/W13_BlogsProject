@@ -20,4 +20,18 @@ export const validateSignIn = async (c: Context, next: Next) => {
     }
     await next(); 
   };
-
+  
+  export const validateCreateBlog = async (c: Context, next: Next) => {
+    const body = await c.req.json();
+    const { success } = createBlogInput.safeParse(body);
+  
+    if (!success) {
+      c.status(403);
+      return c.json({ msg: "Invalid Input", inform: "Failed Zod Validation" });
+    }
+  
+    c.set("body", body);
+    await next();
+  };
+  
+ 
