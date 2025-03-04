@@ -10,5 +10,14 @@ export const validateSignUp = async (c: Context, next: Next) => {
   }
   await next(); 
 };
-
+export const validateSignIn = async (c: Context, next: Next) => {
+    const body = await c.req.json();
+    const { success } = signedInInput.safeParse(body);
+  
+    if (!success) {
+      c.status(403);
+      return c.json({ msg: "Invalid Input", inform: "Failed Zod Validation" });
+    }
+    await next(); 
+  };
 
