@@ -1,6 +1,10 @@
 import { useEffect, useState } from "react"
-
-export const Quote = (props: any) => {
+interface propsType {
+    msg: string,
+    author: string,
+    design: string
+}
+export const Quote = (props: propsType) => {
     const [quote, setQuote] = useState({
         msg: "",
         author: "anonymous",
