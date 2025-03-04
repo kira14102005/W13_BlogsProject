@@ -27,10 +27,38 @@ userRouter.post("/signup", validateSignUp, async (c) => {
       },
     });
 
-    return c.json({ msg: "SIGNED UP SUCCESS" });
+    const token = await generateToken(res.id, c.env.JWT_KEY);
+    return c.json({ msg: "SIGNED UP SUCCESS", token });
   } catch (e) {
     c.status(411);
     return c.json({ msg: "Some error occurred" });
   }
 });
 
+userRouter.post("/signin", validateSignIn, async (c) => {
+    const prisma = new PrismaClient({
+      datasourceUrl: c.env.DATABASE_URL,
+    }).$extends(withAccelerate());
+  
+    const body = await c.req.json();
+  
+    try {
+      const res = await prisma.cand.findUnique({ where: { email: body.email } });
+  
+      if (!res) {
+        c.status(403);
+        return c.text("USER NOT FOUND");
+      }
+  
+      if (res.password !== body.password) {
+        return c.text("WRONG PASSWORD");
+      }
+  
+      const token = await generateToken(res.id, c.env.JWT_KEY);
+      return c.json({ msg: "SIGNED IN SUCCESS", token });
+    } catch (e) {
+      c.status(411);
+      return c.json({ msg: "Some error occurred" });
+    }
+  });
+  
