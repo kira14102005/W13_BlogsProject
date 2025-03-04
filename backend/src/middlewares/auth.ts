@@ -1,6 +1,10 @@
 import { verify, sign } from "hono/jwt";
 import { Context, Next } from "hono";
 
+export const generateToken = async (id: string, secret: string) => {
+    return await sign({ id }, secret);
+  };
+  
 export const authMiddleware = async (c: Context, next: Next) => {
   const authHeader = c.req.header("Authorization");
   if (!authHeader) {
