@@ -31,14 +31,10 @@ export const BlogDetails = () => {
                 desc={blog.desc}
                 authorName={blog.author.name}
                 authorEmail={blog.author.email}
-                published  = {blog.published}
+                published={blog.published}
+                handleEdit={handleEdit}
             />
-            <button
-                onClick={handleEdit}
-                className="mt-4 bg-teal-600 text-white px-4 py-2 rounded-md hover:bg-teal-900"
-            >
-                Edit Blog
-            </button>
+
         </div>
     );
 };
