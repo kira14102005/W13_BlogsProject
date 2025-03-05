@@ -15,42 +15,31 @@ export const blogRouter = new Hono<{
   };
 }>();
 
-
 blogRouter.use("/*", authMiddleware);
 
+const getPrisma = (c: any) =>
+  new PrismaClient({ datasourceUrl: c.env.DATABASE_URL }).$extends(withAccelerate());
+
 blogRouter.post("/", validateCreateBlog, async (c) => {
-    const prisma = new PrismaClient({
-        datasourceUrl: c.env.DATABASE_URL,
-      }).$extends(withAccelerate());
-      
-  const body = await c.req.json();
-  const authorID = c.get("userId");
+  const prisma = getPrisma(c);
+  const { title, desc } = await c.req.json();
+  const authorId = c.get("userId");
 
   try {
-    const blog = await prisma.post.create({
-      data: {
-        authorId: authorID,
-        title: body.title,
-        desc: body.desc,
-      },
-    });
-
-    return c.json({ msg: "Blog Created successfully", id: blog.id });
+    const blog = await prisma.post.create({ data: { authorId, title, desc } });
+    return c.json({ msg: "Blog created successfully", id: blog.id });
   } catch (e: any) {
     c.status(STATUS_CODES.INTERNAL_ERROR);
     return c.json({ msg: "Error in blog creation", error: e.message });
   }
 });
+
 blogRouter.get("/bulk", async (c) => {
-    const prisma = new PrismaClient({
-        datasourceUrl: c.env.DATABASE_URL,
-      }).$extends(withAccelerate());
-      
-  const authorID = c.get("userId");
+  const prisma = getPrisma(c);
+  const authorId = c.get("userId");
 
   try {
-    const blogs = await prisma.post.findMany({ where: { authorId: authorID } });
-
+    const blogs = await prisma.post.findMany({ where: { authorId } });
     return c.json({ blogs });
   } catch (e: any) {
     c.status(STATUS_CODES.INTERNAL_ERROR);
@@ -59,54 +48,47 @@ blogRouter.get("/bulk", async (c) => {
 });
 
 blogRouter.put("/", validateUpdateBlog, async (c) => {
-    const prisma = new PrismaClient({
-        datasourceUrl: c.env.DATABASE_URL,
-      }).$extends(withAccelerate());
-      
-    const body = await c.req.json();
-  
-    try {
-      const updatedBlog = await prisma.post.update({
-        where: { id: body.blogid },
-        data: {
-          title: body.title,
-          desc: body.desc,
-        },
-      });
-  
-      return c.json({ msg: "Blog updated successfully", id: updatedBlog.id });
-    } catch (e: any) {
-      c.status(STATUS_CODES.INTERNAL_ERROR);
-      return c.text("Error in BLOG updation");
+  const prisma = getPrisma(c);
+  const { blogid, title, desc } = await c.req.json();
+
+  try {
+    const existingBlog = await prisma.post.findUnique({ where: { id: blogid } });
+    if (!existingBlog) {
+      c.status(STATUS_CODES.RESOURCE_NOT_FOUND);
+      return c.json({ msg: "No blog found with the given ID" });
     }
-  });
-  blogRouter.get("/:id", async (c) => {
-    const prisma = new PrismaClient({
-        datasourceUrl: c.env.DATABASE_URL,
-      }).$extends(withAccelerate());
-      
-    const blogID = c.req.param("id");
-  
-    try {
-      const blog = await prisma.post.findUnique({
-        where: { id: blogID },
-        select: {
-          id: true,
-          title: true,
-          desc: true,
-          author: { select: { name: true, email: true } },
-        },
-      });
-  
-      if (!blog) {
-        c.status(STATUS_CODES.RESOURCE_NOT_FOUND);
-        return c.json({ msg: "No blog found with the given ID" });
-      }
-  
-      return c.json({ msg: "Blog fetched successfully", blog });
-    } catch (e: any) {
-      c.status(STATUS_CODES.INTERNAL_ERROR);
-      return c.text("Error in fetching blog");
+
+    const updatedBlog = await prisma.post.update({ where: { id: blogid }, data: { title, desc } });
+    return c.json({ msg: "Blog updated successfully", id: updatedBlog.id });
+  } catch (e: any) {
+    c.status(STATUS_CODES.INTERNAL_ERROR);
+    return c.json({ msg: "Error in blog updation", error: e.message });
+  }
+});
+
+blogRouter.get("/:id", async (c) => {
+  const prisma = getPrisma(c);
+  const blogID = c.req.param("id");
+
+  try {
+    const blog = await prisma.post.findUnique({
+      where: { id: blogID },
+      select: {
+        id: true,
+        title: true,
+        desc: true,
+        author: { select: { name: true, email: true } },
+      },
+    });
+
+    if (!blog) {
+      c.status(STATUS_CODES.RESOURCE_NOT_FOUND);
+      return c.json({ msg: "No blog found with the given ID" });
     }
-  });
-  
+
+    return c.json({ msg: "Blog fetched successfully", blog });
+  } catch (e: any) {
+    c.status(STATUS_CODES.INTERNAL_ERROR);
+    return c.json({ msg: "Error in fetching blog", error: e.message });
+  }
+});
