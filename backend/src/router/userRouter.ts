@@ -31,8 +31,8 @@ userRouter.post("/signup", validateSignUp, async (c) => {
     const token = await generateToken(res.id, c.env.JWT_KEY);
     return c.json({ msg: "SIGNED UP SUCCESS", token });
   } catch (e) {
-    c.status(411);
-    return c.json({ msg: "Some error occurred" });
+    c.status(500);
+    return c.json({ msg: "Internal DB Error" });
   }
 });
 
@@ -52,14 +52,15 @@ userRouter.post("/signin", validateSignIn, async (c) => {
       }
   
       if (res.password !== body.password) {
+        c.status(401)
         return c.text("WRONG PASSWORD");
       }
   
       const token = await generateToken(res.id, c.env.JWT_KEY);
       return c.json({ msg: "SIGNED IN SUCCESS", token });
     } catch (e) {
-      c.status(411);
-      return c.json({ msg: "Some error occurred" });
+      c.status(500);
+      return c.json({ msg: "Internal Db error" });
     }
   });
   
