@@ -10,6 +10,9 @@ export const userRouter = new Hono<{
     DATABASE_URL: string;
     JWT_KEY: string;
   };
+  Variables: {
+    userId: string;
+  }
 
 }>();
 userRouter.post("/signup", validateSignUp, async (c) => {
@@ -46,30 +49,47 @@ userRouter.post("/signup", validateSignUp, async (c) => {
 });
 
 userRouter.post("/signin", validateSignIn, async (c) => {
-    const prisma = new PrismaClient({
-      datasourceUrl: c.env.DATABASE_URL,
-    }).$extends(withAccelerate());
-  
-    const body = await c.req.json();
-  
-    try {
-      const res = await prisma.cand.findUnique({ where: { email: body.email } });
-  
-      if (!res) {
-        c.status(STATUS_CODES.UNAUTHORIZED);
-        return c.text("USER NOT FOUND");
-      }
-  
-      if (res.password !== body.password) {
-        c.status(STATUS_CODES.UNAUTHORIZED)
-        return c.text("WRONG PASSWORD");
-      }
-  
-      const token = await generateToken(res.id, c.env.JWT_KEY);
-      return c.json({ msg: "SIGNED IN SUCCESS", token });
-    } catch (e) {
-      c.status(STATUS_CODES.INTERNAL_ERROR);
-      return c.json({ msg: "Internal Db error" });
+  const prisma = new PrismaClient({
+    datasourceUrl: c.env.DATABASE_URL,
+  }).$extends(withAccelerate());
+
+  const body = await c.req.json();
+
+  try {
+    const res = await prisma.cand.findUnique({ where: { email: body.email } });
+
+    if (!res) {
+      c.status(STATUS_CODES.UNAUTHORIZED);
+      return c.text("USER NOT FOUND");
     }
-  });
-  
+
+    if (res.password !== body.password) {
+      c.status(STATUS_CODES.UNAUTHORIZED)
+      return c.text("WRONG PASSWORD");
+    }
+
+    const token = await generateToken(res.id, c.env.JWT_KEY);
+    return c.json({ msg: "SIGNED IN SUCCESS", token });
+  } catch (e) {
+    c.status(STATUS_CODES.INTERNAL_ERROR);
+    return c.json({ msg: "Internal Db error" });
+  }
+});
+userRouter.get('/me', authMiddleware, async (c) => {
+  const prisma = new PrismaClient({
+    datasourceUrl: c.env.DATABASE_URL,
+  }).$extends(withAccelerate());
+  const userId: string = c.get("userId") as string;
+
+  try {
+    const user = await prisma.cand.findUnique({ where: { id: userId } });
+    if (!user) {
+       c.status(STATUS_CODES.RESOURCE_NOT_FOUND);
+        return c.json({ msg: "User not found" });
+    }
+    return c.json({ username: user?.name, email: user?.email });
+  } catch (e) {
+    c.status(STATUS_CODES.INTERNAL_ERROR);
+    return c.json({ msg: "Error fetching user details" });
+  }
+})
