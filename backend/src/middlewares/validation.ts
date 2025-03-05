@@ -6,7 +6,7 @@ export const validateSignUp = async (c: Context, next: Next) => {
   const { success } = signedInput.safeParse(body);
 
   if (!success) {
-    c.status(403);
+    c.status(400);
     return c.json({ msg: "Invalid Input", inform: "Failed Zod Validation" });
   }
   await next(); 
@@ -16,7 +16,7 @@ export const validateSignIn = async (c: Context, next: Next) => {
     const { success } = signedInInput.safeParse(body);
   
     if (!success) {
-      c.status(403);
+      c.status(400);
       return c.json({ msg: "Invalid Input", inform: "Failed Zod Validation" });
     }
     await next(); 
@@ -27,7 +27,7 @@ export const validateSignIn = async (c: Context, next: Next) => {
     const { success } = createBlogInput.safeParse(body);
   
     if (!success) {
-      c.status(403);
+      c.status(400);
       return c.json({ msg: "Invalid Input", inform: "Failed Zod Validation" });
     }
   
@@ -40,7 +40,7 @@ export const validateSignIn = async (c: Context, next: Next) => {
     const { success } = updateBlogInput.safeParse(body);
   
     if (!success) {
-      c.status(403);
+      c.status(400);
       return c.json({ msg: "Invalid Input", inform: "Failed Zod Validation" });
     }
   
