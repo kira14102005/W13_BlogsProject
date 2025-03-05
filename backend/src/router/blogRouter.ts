@@ -3,6 +3,7 @@ import { PrismaClient } from "@prisma/client/edge";
 import { withAccelerate } from "@prisma/extension-accelerate";
 import { authMiddleware } from "../middlewares/auth";
 import { validateCreateBlog, validateUpdateBlog } from "../middlewares/validation";
+import { STATUS_CODES } from "../lib/constant";
 
 export const blogRouter = new Hono<{
   Bindings: {
@@ -36,7 +37,7 @@ blogRouter.post("/", validateCreateBlog, async (c) => {
 
     return c.json({ msg: "Blog Created successfully", id: blog.id });
   } catch (e: any) {
-    c.status(500);
+    c.status(STATUS_CODES.INTERNAL_ERROR);
     return c.json({ msg: "Error in blog creation", error: e.message });
   }
 });
@@ -52,7 +53,7 @@ blogRouter.get("/bulk", async (c) => {
 
     return c.json({ blogs });
   } catch (e: any) {
-    c.status(500);
+    c.status(STATUS_CODES.INTERNAL_ERROR);
     return c.json({ msg: "Error fetching blogs", error: e.message });
   }
 });
@@ -75,7 +76,7 @@ blogRouter.put("/", validateUpdateBlog, async (c) => {
   
       return c.json({ msg: "Blog updated successfully", id: updatedBlog.id });
     } catch (e: any) {
-      c.status(411);
+      c.status(STATUS_CODES.INTERNAL_ERROR);
       return c.text("Error in BLOG updation");
     }
   });
@@ -98,13 +99,13 @@ blogRouter.put("/", validateUpdateBlog, async (c) => {
       });
   
       if (!blog) {
-        c.status(403);
+        c.status(STATUS_CODES.RESOURCE_NOT_FOUND);
         return c.json({ msg: "No blog found with the given ID" });
       }
   
       return c.json({ msg: "Blog fetched successfully", blog });
     } catch (e: any) {
-      c.status(411);
+      c.status(STATUS_CODES.INTERNAL_ERROR);
       return c.text("Error in fetching blog");
     }
   });

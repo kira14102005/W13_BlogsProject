@@ -1,5 +1,6 @@
 import { verify, sign } from "hono/jwt";
 import { Context, Next } from "hono";
+import { STATUS_CODES } from "../lib/constant";
 
 export const generateToken = async (id: string, secret: string) => {
     return await sign({ id : id }, secret);
@@ -8,7 +9,7 @@ export const generateToken = async (id: string, secret: string) => {
 export const authMiddleware = async (c: Context, next: Next) => {
   const authHeader = c.req.header("Authorization");
   if (!authHeader) {
-    c.status(401);
+    c.status(STATUS_CODES.JWT_MISSING);
     return c.json({ msg: "Unauthorized - No Token Provided" });
   }
 
@@ -20,7 +21,7 @@ export const authMiddleware = async (c: Context, next: Next) => {
     c.set("userId", decoded.id);
     await next();
   } catch (err) {
-    c.status(403);
+    c.status(STATUS_CODES.UNAUTHORIZED);
     return c.json({ msg: "Unauthorized - Invalid Token" });
   }
 };

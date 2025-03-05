@@ -1,12 +1,12 @@
 import { createBlogInput, signedInInput, signedInput, updateBlogInput } from "@rrai21/iden34";
 import { Context, Next } from "hono";
-
+import { STATUS_CODES } from "../lib/constant";
 export const validateSignUp = async (c: Context, next: Next) => {
   const body = await c.req.json();
   const { success } = signedInput.safeParse(body);
 
   if (!success) {
-    c.status(400);
+    c.status(STATUS_CODES.BAD_REQUEST);
     return c.json({ msg: "Invalid Input", inform: "Failed Zod Validation" });
   }
   await next(); 
@@ -16,7 +16,7 @@ export const validateSignIn = async (c: Context, next: Next) => {
     const { success } = signedInInput.safeParse(body);
   
     if (!success) {
-      c.status(400);
+      c.status(STATUS_CODES.BAD_REQUEST);
       return c.json({ msg: "Invalid Input", inform: "Failed Zod Validation" });
     }
     await next(); 
@@ -27,7 +27,7 @@ export const validateSignIn = async (c: Context, next: Next) => {
     const { success } = createBlogInput.safeParse(body);
   
     if (!success) {
-      c.status(400);
+      c.status(STATUS_CODES.BAD_REQUEST);
       return c.json({ msg: "Invalid Input", inform: "Failed Zod Validation" });
     }
   
@@ -40,7 +40,7 @@ export const validateSignIn = async (c: Context, next: Next) => {
     const { success } = updateBlogInput.safeParse(body);
   
     if (!success) {
-      c.status(400);
+      c.status(STATUS_CODES.BAD_REQUEST);
       return c.json({ msg: "Invalid Input", inform: "Failed Zod Validation" });
     }
   
