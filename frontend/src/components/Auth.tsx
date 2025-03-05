@@ -35,7 +35,7 @@ export const Auth = ({ type }: AuthType) => {
 
             axios.defaults.headers.common["Authorization"] = `Bearer ${token}`; // Automatically attach token
 
-            navigate("/blogs");
+            navigate("/");
         } catch {
             alert(`Error while ${type}`);
         }
