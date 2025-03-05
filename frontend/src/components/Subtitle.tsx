@@ -1,4 +1,3 @@
-import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 export const Subtitle = ({ content, src, linkText } : {content : string , src : string , linkText  : string}) => {
     return <>

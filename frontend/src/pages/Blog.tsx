@@ -1,4 +1,4 @@
-import { useEffect, useState, useCallback, useMemo } from "react";
+import { useEffect, useState, useMemo } from "react";
 import axios from "axios";
 import { BACKEND_URL } from "../config";
 import { Title } from "../components/Title";
