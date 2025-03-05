@@ -3,11 +3,9 @@ import axios from "axios";
 import { BACKEND_URL } from "../config";
 import { Title } from "../components/Title";
 import { Sidebar } from "../components/SideBar";
-import { useNavigate } from "react-router-dom";
 
 export const Home = () => {
     const [userName, setUserName] = useState<string | null>(null);
-    const navigate = useNavigate();
 
     const getTokenFromCookies = useMemo(() => {
         const cookies = document.cookie.split("; ");
