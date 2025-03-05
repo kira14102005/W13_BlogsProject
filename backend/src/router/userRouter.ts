@@ -11,7 +11,6 @@ export const userRouter = new Hono<{
   };
 
 }>();
-
 userRouter.post("/signup", validateSignUp, async (c) => {
   const prisma = new PrismaClient({
     datasourceUrl: c.env.DATABASE_URL,
@@ -20,6 +19,15 @@ userRouter.post("/signup", validateSignUp, async (c) => {
   const body = await c.req.json();
 
   try {
+    const existingUser = await prisma.cand.findUnique({
+      where: { email: body.email },
+    });
+
+    if (existingUser) {
+      c.status(409);
+      return c.json({ msg: "User already exists" });
+    }
+
     const res = await prisma.cand.create({
       data: {
         email: body.email,
