@@ -77,6 +77,7 @@ blogRouter.get("/:id", async (c) => {
         id: true,
         title: true,
         desc: true,
+        published: true,
         author: { select: { name: true, email: true } },
       },
     });
