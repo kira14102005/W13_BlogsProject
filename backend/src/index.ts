@@ -1,7 +1,7 @@
 import { OpenAPIHono } from "@hono/zod-openapi";
 import { cors } from "hono/cors";
 import { userRouter } from "./router/userRouter";
-// import { blogRouter } from "./router/blogRouter";
+import { blogRouter } from "./router/blogRouter";
 
 const app = new OpenAPIHono<{
   Bindings: {
@@ -12,7 +12,7 @@ const app = new OpenAPIHono<{
 
 app.use("/*", cors());
 
-// app.route("/api/v1/blog", blogRouter);
+app.route("/api/v1/blog", blogRouter);
 app.route("/api/v1/user", userRouter);
 
 app.doc("/doc", {
