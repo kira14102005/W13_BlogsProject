@@ -8,7 +8,6 @@ import { BlogDetails } from "./pages/IndividualBlog"
 import { UpdateBlog } from "./pages/UpdateBlog"
 import { Home } from "./pages/Home"
 function App() {
-  // const [count, setCount] = useState(0)
 
   return (
     <>

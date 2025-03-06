@@ -23,7 +23,7 @@ export const CreateBlog = () => {
 
     const token = useMemo(getTokenFromCookies, []);
 
-    const handleSubmit = async (e: any) => {
+    const handleSubmit = async () => {
         setLoading(true);
 
         if (!token) {

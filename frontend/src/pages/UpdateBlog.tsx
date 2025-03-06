@@ -49,8 +49,8 @@ export const UpdateBlog = () => {
         <div className="h-screen flex flex-col items-center p-5">
             <Title content="Update Blog" />
             <form onSubmit={handleUpdate} className="w-full max-w-md bg-white shadow-lg rounded-lg p-5">
-                <InputField label="Title" name="title" placeholder="Enter Title" value={title} onChange={(e) => debouncedSetTitle(e.target.value)} />
-                <InputField label="Description" name="desc" placeholder="Enter Description" value={desc} onChange={(e) => debouncedSetDesc(e.target.value)} />
+                <InputField label="Title" name="title" placeholder="Enter Title" onChange={(e) => debouncedSetTitle(e.target.value)} />
+                <InputField label="Description" name="desc" placeholder="Enter Description" onChange={(e) => debouncedSetDesc(e.target.value)} />
                 <div className="w-full justify-center flex">
                     <button
                         type="submit"

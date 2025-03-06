@@ -76,7 +76,6 @@ export const Auth = ({ type }: AuthType) => {
                         label="Name"
                         name="name"
                         placeholder="Enter your name"
-                        value={postInputs.name || ""}
                         onChange={handleChange}
                     />
                 )}
@@ -84,7 +83,6 @@ export const Auth = ({ type }: AuthType) => {
                     label="Email"
                     name="email"
                     placeholder="Enter your email"
-                    value={postInputs.email}
                     onChange={handleChange}
                 />
                 <InputField
@@ -92,7 +90,6 @@ export const Auth = ({ type }: AuthType) => {
                     name="password"
                     type="password"
                     placeholder="Enter your password"
-                    value={postInputs.password}
                     onChange={handleChange}
                 />
                 <SubmitButton label={type === "signup" ? "Register" : "Login"} />
