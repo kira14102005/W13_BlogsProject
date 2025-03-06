@@ -7,6 +7,7 @@ import { SignupInfer } from "@rrai21/iden34";
 import { BACKEND_URL } from "../config";
 import { SubmitButton } from "./SubmitButton";
 import { InputField } from "./InputField";
+import { useDebounce } from "../customhooks/useDebounce";
 
 type AuthType = { type: "signin" | "signup" };
 
@@ -18,9 +19,13 @@ export const Auth = ({ type }: AuthType) => {
         password: "",
     });
 
+    const debouncedSetPostInputs = useDebounce((updatedInputs: SignupInfer) => {
+        setPostInputs(updatedInputs);
+    }, 500);
+
     const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
         const { name, value } = e.target;
-        setPostInputs((prev) => ({ ...prev, [name]: value }));
+        debouncedSetPostInputs({ ...postInputs, [name]: value });
     };
 
     const sendReq = async () => {
@@ -31,9 +36,9 @@ export const Auth = ({ type }: AuthType) => {
             );
             const token = res.data.token;
 
-            document.cookie = `token=${token}; path=/; Secure; SameSite=Strict`; // Stores token in cookie
+            document.cookie = `token=${token}; path=/; Secure; SameSite=Strict`;
 
-            axios.defaults.headers.common["Authorization"] = `Bearer ${token}`; // Automatically attach token
+            axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
 
             navigate("/");
         } catch {
