@@ -4,8 +4,10 @@ import { BACKEND_URL } from "../config";
 import { Title } from "../components/Title";
 import { InputField } from "../components/InputField";
 import { useDebounce } from "../customhooks/useDebounce";
+import { CustomButton } from "../components/CustomButton";
 
 export const CreateBlog = () => {
+    console.log("RERENDER")
     const [title, setTitle] = useState("");
     const [desc, setDesc] = useState("");
     const [loading, setLoading] = useState(false);
@@ -21,8 +23,7 @@ export const CreateBlog = () => {
 
     const token = useMemo(getTokenFromCookies, []);
 
-    const handleSubmit = async (e: React.FormEvent) => {
-        e.preventDefault();
+    const handleSubmit = async (e: any) => {
         setLoading(true);
 
         if (!token) {
@@ -51,13 +52,11 @@ export const CreateBlog = () => {
     return (
         <div className="h-screen flex flex-col items-center p-5">
             <Title content="Create a New Blog" />
-            <form onSubmit={handleSubmit} className="w-full max-w-md bg-white shadow-lg rounded-lg p-5">
-                <InputField label="Title" name="title" placeholder="Enter Title" value={title} onChange={(e) => debouncedSetTitle(e.target.value)} />
-                <InputField label="Description" name="desc" placeholder="Enter Description" value={desc} onChange={(e) => debouncedSetDesc(e.target.value)} />
-                <button type="submit" disabled={loading} className="w-full bg-blue-600 text-white p-2 rounded-md hover:bg-blue-700 disabled:bg-gray-400">
-                    {loading ? "Creating..." : "Create Blog"}
-                </button>
-            </form>
+            <div className="w-full max-w-md bg-white shadow-lg rounded-lg p-5">
+                <InputField label="Title" name="title" placeholder="Enter Title"  onChange={(e) => debouncedSetTitle(e.target.value)} />
+                <InputField label="Description" name="desc" placeholder="Enter Description"  onChange={(e) => debouncedSetDesc(e.target.value)} />
+               <div className="flex justify-center"> <CustomButton onclick={handleSubmit} label={loading ? "Creating..." : "Create Blog"} /></div>
+            </div>
         </div>
     );
 };

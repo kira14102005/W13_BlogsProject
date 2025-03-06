@@ -1,3 +1,5 @@
+import { CustomButton } from "./CustomButton";
+
 interface BlogCardProps {
     title: string;
     desc: string;
@@ -20,12 +22,7 @@ export const BlogCard = ({ title, desc, authorName, authorEmail, published, hand
                     <p className="text-lg font-semibold text-gray-800">{authorName}</p>
                     <p className="text-sm text-gray-600">{authorEmail}</p></div>
 
-                <div className="flex flex-col-reverse">   <button
-                    onClick={handleEdit}
-                    className="shadow-[inset_0_0_0_2px_#616467] text-black px-12 py-4 rounded-full tracking-widest uppercase font-bold bg-transparent hover:bg-[#616467] hover:text-white  transition duration-200"
-                >
-                    Edit Blog
-                </button> </div>
+                <div className="flex flex-col-reverse"> <CustomButton onclick={handleEdit} label="Edit Blog" /></div>
             </div>
         </div>
     );
