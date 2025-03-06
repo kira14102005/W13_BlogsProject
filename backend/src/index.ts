@@ -2,6 +2,7 @@ import { OpenAPIHono } from "@hono/zod-openapi";
 import { cors } from "hono/cors";
 import { userRouter } from "./router/userRouter";
 import { blogRouter } from "./router/blogRouter";
+import { swaggerUI } from "@hono/swagger-ui";
 
 const app = new OpenAPIHono<{
   Bindings: {
@@ -23,5 +24,6 @@ app.doc("/doc", {
   },
 });
 
+app.get("/swagger", swaggerUI({ url: "/doc" }));
 
 export default app;
