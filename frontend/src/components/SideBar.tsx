@@ -96,6 +96,18 @@ export const Sidebar = ({ loggedIn, onLogout }: { loggedIn: boolean; onLogout: (
                                 </li>
                                 <li>
                                     <button
+                                        onClick={() => navigate("/createblog")}
+                                        className="flex w-full items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group"
+                                    >
+                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" className="size-6">
+                                            <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v6m3-3H9m12 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
+                                        </svg>
+
+                                        <span className="ms-3">New Blog</span>
+                                    </button>
+                                </li>
+                                <li>
+                                    <button
                                         onClick={onLogout}
                                         className="flex w-full items-center p-2 text-red-600 rounded-lg hover:bg-red-100 dark:hover:bg-red-700 group"
                                     >
