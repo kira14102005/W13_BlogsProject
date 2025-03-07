@@ -31,7 +31,7 @@ export const UpdateBlog = () => {
             }
 
             await axios.put(
-                `${BACKEND_URL}/api/v1/blog/`,
+                `${BACKEND_URL}/api/v1/blog/update`,
                 { blogid: blog.id, title, desc },
                 { headers: { Authorization: `Bearer ${token}` } }
             );

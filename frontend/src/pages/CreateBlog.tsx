@@ -34,7 +34,7 @@ export const CreateBlog = () => {
 
         try {
             await axios.post(
-                `${BACKEND_URL}/api/v1/blog/`,
+                `${BACKEND_URL}/api/v1/blog/create`,
                 { title, desc },
                 { headers: { Authorization: `Bearer ${token}` } }
             );

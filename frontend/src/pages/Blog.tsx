@@ -14,7 +14,7 @@ const BlogItem = ({ blog, index, token }: { blog: Blog; index: number, token: st
 
     const handleClick = async () => {
         try {
-            const res = await axios.get(`${BACKEND_URL}/api/v1/blog/${blog.id}`, { headers: { Authorization: `Bearer ${token}` }, });
+            const res = await axios.get(`${BACKEND_URL}/api/v1/blog/get/${blog.id}`, { headers: { Authorization: `Bearer ${token}` }, });
             navigate(`/blog/${blog.id}`, { state: res.data.blog });
         } catch (error) {
             alert("Error fetching blog details");
