@@ -1,9 +1,0 @@
-name = "backend"
-main = "src/index.ts"
-compatibility_date = "2024-12-21"
-
-# compatibility_flags = [ "nodejs_compat" ]
-
-[vars] 
-DATABASE_URL="YOUR_PRISMA_ACCELERATE_DIRECT_URL"
-JWT_KEY = "JWTSECRETKEY"

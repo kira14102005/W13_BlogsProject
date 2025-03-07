@@ -30,7 +30,7 @@ const runMiddleware = async (
 
 const createBlogRoute = createRoute({
   method: "post",
-  path: "/",
+  path: "/create",
   summary: "Create a new blog post",
   tags: ["Blog"],
   request: {
@@ -46,7 +46,7 @@ const createBlogRoute = createRoute({
 
 const updateBlogRoute = createRoute({
   method: "put",
-  path: "/",
+  path: "/update",
   summary: "Update an existing blog post",
   tags: ["Blog"],
   request: {
@@ -63,7 +63,7 @@ const updateBlogRoute = createRoute({
 
 const getBlogRoute = createRoute({
   method: "get",
-  path: "/{id}",
+  path: "/get/{id}",
   summary: "Get a blog post by ID",
   tags: ["Blog"],
   parameters: [
@@ -113,7 +113,6 @@ blogRouter.openapi(createBlogRoute, async (c) => {
   //@ts-ignore
   const middlewareResponse = await runMiddleware(c, validateCreateBlog);
   if (middlewareResponse) return middlewareResponse;
-
   const prisma = getPrisma(c);
   const { title, desc } = await c.req.json();
   const authorId = c.get("userId");
@@ -131,7 +130,6 @@ blogRouter.openapi(updateBlogRoute, async (c) => {
   //@ts-ignore
   const middlewareResponse = await runMiddleware(c, validateUpdateBlog);
   if (middlewareResponse) return middlewareResponse;
-
   const prisma = getPrisma(c);
   const { blogid, title, desc } = await c.req.json();
 
