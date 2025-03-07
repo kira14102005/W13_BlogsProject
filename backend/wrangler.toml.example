@@ -1,0 +1,9 @@
+name = "blogbackendversion2"
+main = "src/index.ts"
+compatibility_date = "2024-12-21"
+
+# compatibility_flags = [ "nodejs_compat" ]
+
+[vars] 
+DATABASE_URL="PRISMA ACCELERATE URL"
+JWT_KEY = "JWTSECRETKEY"
