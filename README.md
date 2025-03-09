@@ -157,7 +157,7 @@ The backend provides an **OpenAPI specification** with a Swagger UI:
 
 ## 👥 Contributors
 
-👤 **Harshit Rai**\
+👤 **Harshit Rai**
 
 ---
 
