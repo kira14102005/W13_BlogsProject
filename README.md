@@ -1,114 +1,174 @@
-# Blogs Website
+# 🚀 Blog Platform
 
-## Why I Built This 🛠️
-I wanted to explore **type safety, validation, and modularity** in a full-stack project. Instead of directly jumping into a monorepo, I first created a **custom NPM package (`@rrai21/iden34`)** to share types and validation between the frontend and backend. This project helped me understand the differences between separate repositories and monorepos.
+A **full-stack** blog application built using **React**, **Hono**, **Cloudflare Workers**, and **Prisma Accelerate**. This project allows users to **sign up, create blogs, edit blogs, and view blogs** with authentication and real-time updates.
 
-## Tech Stack 🚀
-- **Frontend:** React, React Router
-- **Backend:** Hono (running on Cloudflare Workers)
-- **Database:** PostgreSQL (via Prisma ORM)
-- **Validation:** Zod (via the custom NPM package)
+## 🌍 Live Demo
 
-## My Custom NPM Package: `@rrai21/iden34`
-This package contains:
-- **Shared Type Definitions** (for authentication, blog posts, etc.)
-- **Zod Schema Validations** (ensuring API inputs are type-safe)
-- **Reusability**: Used in both frontend and backend to avoid code duplication
+- **Frontend:** [W13 Blogs Project](https://w13-blogsproject.pages.dev/)
+- **Backend:** [Blog API](https://blogbackendversion2.raiharshit66.workers.dev)
 
-### How I Used It:
-#### In the Frontend:
-```tsx
-import { SignupInfer } from "@rrai21/iden34";
+---
 
-const [postInputs, setPostInputs] = useState<SignupInfer>({
-  email: "example@gmail.com",
-  name: "John Doe",
-  password: "password123"
-});
-```
+## 📸 Screenshots
 
-#### In the Backend:
-```ts
-import { SignupSchema } from "@rrai21/iden34";
+### Home Page
+![Home Page](./assets/images/home.png)
 
-app.post("/api/v1/user/signup", async (c) => {
-  const body = await c.req.json();
-  const parsed = SignupSchema.safeParse(body);
-  if (!parsed.success) {
-    return c.json({ error: "Invalid input" }, 400);
-  }
-  // Proceed with Prisma logic
-});
-```
 
-## Database & Prisma Setup 🗄️
-I used **Prisma ORM** with PostgreSQL for structured, efficient database queries.
 
-### Prisma Schema (`schema.prisma`)
-```prisma
-model User {
-  id       String  @id @default(uuid())
-  name     String
-  email    String  @unique
-  password String
-  posts    Post[]
-}
+### Blog List View
+![All Blogs](./assets/images/YourBlogs.png)
 
-model Post {
-  id        String   @id @default(uuid())
-  title     String
-  content   String
-  authorId  String
-  author    User     @relation(fields: [authorId], references: [id])
-  createdAt DateTime @default(now())
-}
-```
 
-## How to Run Locally ⚡
 
-### 1. Clone the Repository
+### Create Blog Page
+![Create Blog](./assets/images/create.png)
+
+
+
+### Edit Blog Page
+![Edit Blog](./assets/images/editBlog.png)
+
+
+### Individual Blog Page
+![Individual Blog](./assets/images/Individual.png)
+
+
+---
+
+## 📦 Tech Stack
+
+### 🔹 **Frontend:**
+
+- React + TypeScript
+- React Router
+- Axios for API requests
+- TailwindCSS for styling
+
+### 🔹 **Backend:**
+
+- Hono (Cloudflare Workers framework)
+- Prisma Accelerate (Edge database)
+- JWT Authentication
+- Zod for validation
+- OpenAPI documentation with `@hono/zod-openapi`
+
+### 🔹 **Deployment:**
+
+- **Frontend:** Deployed on Cloudflare Pages
+- **Backend:** Deployed on Cloudflare Workers
+
+---
+
+## 🛠️ Features
+
+✅ User Authentication (Sign Up, Sign In, JWT-based Auth)\
+✅ Blog CRUD operations (Create, Read, Update, Delete)\
+✅ Secure API with validation and error handling\
+✅ OpenAPI Spec with Swagger UI\
+✅ Prisma Accelerate for optimized database queries
+
+---
+
+## 🎯 Installation & Setup
+
+### 🔹 **1. Clone the Repository**
+
 ```sh
-git clone https://github.com/your-repo/blogs-website.git
-cd blogs-website
+git clone https://github.com/kira14102005/W13_BlogsProject
+cd W13_BlogProject
 ```
 
-### 2. Install Dependencies
-#### Backend:
+### 🔹 **2. Backend Setup**
+
 ```sh
 cd backend
 npm install
 ```
-#### Frontend:
+
+#### **Environment Variables (Backend)**
+
+Create a `.env` file inside `backend/` and configure it based on `.env.example`:
+
+```sh
+DATABASE_URL=your_prisma_accelerate_url
+JWT_KEY=your_secret_key
+```
+
+Additionally, ensure that `wrangler.toml` is properly configured. You can use `wrangler.toml.example` as a reference.
+
+For additional database configuration inside `backend/db/`, refer to `.env.example` for required environment variables.
+
+Run the backend locally:
+
+```sh
+npm run dev
+```
+
+### 🔹 **3. Frontend Setup**
+
 ```sh
 cd frontend
 npm install
 ```
 
-### 3. Setup Database
+#### **Environment Variables (Frontend)**
+
+Create a `.env` file inside `frontend/` and configure it based on `.env.example`:
+
 ```sh
-npx prisma migrate dev --name init
+VITE_BACKEND_URL=your_backend_url
 ```
 
-### 4. Start the Project
-#### Start Backend
-```sh
-npm run dev
-```
-#### Start Frontend
+Run the frontend locally:
+
 ```sh
 npm start
 ```
 
-## Features ✅
-- **User Authentication** (Sign up, Sign in using JWT)
-- **Blog Creation & Viewing**
-- **Type-Safe API Calls using Zod & Custom NPM Package**
-- **Database Management with Prisma ORM**
+---
 
-## What’s Next? 🚀
-- Transitioning this project into a **monorepo** for better structure
-- Adding more **advanced Prisma queries** (pagination, filtering)
-- Exploring **Cloudflare KV for caching**
+## 🚀 Deployment
+
+### 🔹 **Deploying Backend on Cloudflare Workers**
+
+```sh
+cd backend
+npx wrangler deploy
+```
+
+### 🔹 **Deploying Frontend on Cloudflare Pages**
+
+```sh
+cd frontend
+npm run build
+npx wrangler pages deploy ./build --project-name blog-frontend
+```
 
 ---
-This project started as an experiment but turned into a solid learning experience in **full-stack development, modularity, and database management**. 🚀
+
+## 📖 API Documentation
+
+The backend provides an **OpenAPI specification** with a Swagger UI:
+
+- [API Docs](https://blogbackendversion2.raiharshit66.workers.dev/swagger)
+
+---
+
+## 👥 Contributors
+
+👤 **Harshit Rai**\
+*Add more contributors here*
+
+---
+
+## 📜 License
+
+This project is licensed under the **MIT License**.
+
+---
+
+## ⭐ Show Your Support!
+
+If you like this project, **give it a star ⭐ on GitHub!**
+
